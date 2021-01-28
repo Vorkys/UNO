@@ -1,6 +1,5 @@
 import random
 
-#print(9000*"\n") <- "clear" console
 cards = ["0-R", "1-R", "1-R", "2-R", "2-R", "3-R", "3-R", "4-R", "4-R", "5-R", "5-R", "6-R", "6-R", "7-R", "7-R", "8-R", "8-R", "9-R", "9-R", "S-R", "S-R", "R-R", "R-R", "+2-R", "+2-R",
          "0-Y", "1-Y", "1-Y", "2-Y", "2-Y", "3-Y", "3-Y", "4-Y", "4-Y", "5-Y", "5-Y", "6-Y", "6-Y", "7-Y", "7-Y", "8-Y", "8-Y", "9-Y", "9-Y", "S-Y", "S-Y", "R-Y", "R-Y", "+2-Y", "+2-Y",
          "0-B", "1-B", "1-B", "2-B", "2-B", "3-B", "3-B", "4-B", "4-B", "5-B", "5-B", "6-B", "6-B", "7-B", "7-B", "8-B", "8-B", "9-B", "9-B", "S-B", "S-B", "R-B", "R-B", "+2-B", "+2-B",
@@ -15,6 +14,8 @@ player_one = []
 player_two = []
 player_three = []
 player_four = []
+
+last_card = ""
 
 def init():
     """Give all the 7 cards to each player"""
@@ -35,7 +36,6 @@ def init():
     #    print("balik neni plny")
 ###########################################################
 
-###########################################################
     for card in range(7):
         _random = random.randint(0, len(_cards) - 1)
         player_one.append(_cards[_random])
@@ -72,7 +72,7 @@ def init():
 def begin():
     """Reveal the first card so the game can begin"""
 
-    global _cards, used_cards
+    global _cards, used_cards, last_card
 
     _pass = False
     _random = random.randint(0, len(_cards) - 1)
@@ -82,24 +82,37 @@ def begin():
         else:
             _pass = True
 
-    print(_cards[_random])
+    last_card = _cards[_random]
 
     used_cards.append(_cards[_random])
 
     del _cards[_random]
 
 def player_move():
-    print("Začne hrát 1. hráč.")
-    input()
+    """Player are putting cards here"""
+    global player_one, player_two, player_three, player_four, last_card
 
     reverse = False
     to_play = 0
+    turns = [1, 2, 3, 4]
 
     while 1:
-        turns = [1, 2, 3, 4]
+        if to_play >= 4:
+            to_play = to_play % 4
 
         if turns[to_play] == 1:
-            
+            #print(9000 * "\n")
+            print("Hraje hrát jedna!! Ostatni nekoukejte se!!!")
+            input("Continue...")
+            print("Karta na poli: {}".format(last_card))
+            print("Tvoje karty jsou: {}".format(" ".join(map(str, player_one))))
+
+            move = int(input("Select card: "))
+            last_card = player_one[move - 1]
+
+            used_cards.append(player_one[move - 1])
+            del player_one[move - 1]
+
 
             if reverse == False:
                 to_play += 1
@@ -107,7 +120,18 @@ def player_move():
                 to_play -= 1
 
         elif turns[to_play] == 2:
-            
+            #print(9000 * "\n")
+            print("Hraje hrát dva!! Ostatni nekoukejte se!!!")
+            input("Continue...")
+            print("Karta na poli: {}".format(last_card))
+            print("Tvoje karty jsou: {}".format(" ".join(map(str, player_two))))
+
+            move = int(input("Select card: "))
+            last_card = player_two[move - 1]
+
+            used_cards.append(player_two[move - 1])
+            del player_two[move - 1]
+
 
             if reverse == False:
                 to_play += 1
@@ -115,7 +139,17 @@ def player_move():
                 to_play -= 1
 
         elif turns[to_play] == 3:
-            
+            #print(9000 * "\n")
+            print("Hraje hrát tri!! Ostatni nekoukejte se!!!")
+            input("Continue...")
+            print("Karta na poli: {}".format(last_card))
+            print("Tvoje karty jsou: {}".format(" ".join(map(str, player_three))))
+
+            move = int(input("Select card: "))
+            last_card = player_three[move - 1]
+
+            used_cards.append(player_three[move - 1])
+            del player_three[move - 1]
 
 
             if reverse == False:
@@ -124,7 +158,17 @@ def player_move():
                 to_play -= 1
 
         elif turns[to_play] == 4:
-            
+            #print(9000 * "\n")
+            print("Hraje hrát ctyri!! Ostatni nekoukejte se!!!")
+            input("Continue...")
+            print("Karta na poli: {}".format(last_card))
+            print("Tvoje karty jsou: {}".format(" ".join(map(str, player_four))))
+
+            move = int(input("Select card: "))
+            last_card = player_four[move - 1]
+
+            used_cards.append(player_four[move - 1])
+            del player_four[move - 1]
 
 
             if reverse == False:
@@ -132,7 +176,6 @@ def player_move():
             else:
                 to_play -= 1
         
-
 
 def play_game():
     """main menu for the player"""
