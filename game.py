@@ -1,227 +1,125 @@
-import random
+from random import randint
+from time import sleep
 """
-- [[hrac 1], [hrac2],...]
-- zlepsit zacatecny lizani karet
-- better begin by giving more "legit" cards
-- player move cely predelat
-    - pridat def hrac_hraje() bude mnohem lehci
+Add UNO option, if the player has 2 cards and can play he must write which card to use AND UNO (exp. 2 UNO)
+If he does that he is out of trouble.
+At the start of each player it prints the len of the others players.
 """
-cards = ["0-R", "1-R", "1-R", "2-R", "2-R", "3-R", "3-R", "4-R", "4-R", "5-R", "5-R", "6-R", "6-R", "7-R", "7-R", "8-R", "8-R", "9-R", "9-R", "S-R", "S-R", "R-R", "R-R", "+2-R", "+2-R",
+all_cards = ["0-R", "1-R", "1-R", "2-R", "2-R", "3-R", "3-R", "4-R", "4-R", "5-R", "5-R", "6-R", "6-R", "7-R", "7-R", "8-R", "8-R", "9-R", "9-R", "S-R", "S-R", "R-R", "R-R", "+2-R", "+2-R",
          "0-Y", "1-Y", "1-Y", "2-Y", "2-Y", "3-Y", "3-Y", "4-Y", "4-Y", "5-Y", "5-Y", "6-Y", "6-Y", "7-Y", "7-Y", "8-Y", "8-Y", "9-Y", "9-Y", "S-Y", "S-Y", "R-Y", "R-Y", "+2-Y", "+2-Y",
          "0-B", "1-B", "1-B", "2-B", "2-B", "3-B", "3-B", "4-B", "4-B", "5-B", "5-B", "6-B", "6-B", "7-B", "7-B", "8-B", "8-B", "9-B", "9-B", "S-B", "S-B", "R-B", "R-B", "+2-B", "+2-B",
          "0-G", "1-G", "1-G", "2-G", "2-G", "3-G", "3-G", "4-G", "4-G", "5-G", "5-G", "6-G", "6-G", "7-G", "7-G", "8-G", "8-G", "9-G", "9-G", "S-G", "S-G", "R-G", "R-G", "+2-G", "+2-G",
          "+4", "+4", "+4", "+4", "W", "W", "W", "W"]
 
-_cards = []
-
-used_cards = []
-
-player_one = []
-player_two = []
-player_three = []
-player_four = []
-
-last_card = ""
-
 def init():
-    """Give all the 7 cards to each player"""
-    global player_one, player_two, player_three, player_four, _cards, cards, used_cards
+    """vytvori hrace, rozda jim karty a ukaze nasledujici kartu"""
+    global used_cards, cards, players, top_card, action, actual_player, num_players
 
-    player_one = []
-    player_two = []
-    player_three = []
-    player_four = []
-    _cards = []
+    action = None                                                                                       #what the player does
+    actual_player = 0                                                                                   #player to play
 
-    for prvek in cards:
-        _cards.append(prvek)
-###########################################################
-    #if len(_cards) == 108:
-    #    print("Balik je plny")
-    #else:
-    #    print("balik neni plny")
-###########################################################
+    cards = []                                                                                          #all the cards for the current game
+    used_cards = []                                                                                     #all cards that are used by player and such in the game
 
-    for card in range(7):
-        _random = random.randint(0, len(_cards) - 1)
-        player_one.append(_cards[_random])
+    players = []                                                                                        #list of players and their cards(hands)
 
-        used_cards.append(_cards[_random])
+    for card in all_cards:                                                                              #creates the list "cards" so the game can be played many times without problems
+        cards.append(card)
 
-        del _cards[_random]
-
-    for card in range(7):
-        _random = random.randint(0, len(_cards) - 1)
-        player_two.append(_cards[_random])
-
-        used_cards.append(_cards[_random])
-
-        del _cards[_random]
-
-    for card in range(7):
-        _random = random.randint(0, len(_cards) - 1)
-        player_three.append(_cards[_random])
-
-        used_cards.append(_cards[_random])
-
-        del _cards[_random]
-
-    for card in range(7):
-        _random = random.randint(0, len(_cards) - 1)
-        player_four.append(_cards[_random])
-
-        used_cards.append(_cards[_random])
-
-        del _cards[_random]
-
-def begin():
-    """Reveal the first card so the game can begin"""
-
-    global _cards, used_cards, last_card
-
-    _pass = False
-    _random = random.randint(0, len(_cards) - 1)
-    while _pass == False:
-        if _cards[_random] == "W" or _cards[_random] == "+4":
-            _random = random.randint(0, len(_cards) - 1)
+    while 2:
+        num_players = int(input("Kolik bude hráčů? "))                                                  #asks how many players to add to "players"
+        if num_players > 1 and num_players < 11:
+            for n in range(1, num_players + 1):
+                players.append([])
+            break
         else:
-            _pass = True
+            print("Tento počet nelze.")
 
-    last_card = _cards[_random]
+    #print("Pocet hracu {} a celk karty {}". format(players, cards))
 
-    used_cards.append(_cards[_random])
+    for player in players:                                                                              #distribute the cards to the players
+        for num_cards in range(7):
+            _randcard = randint(0, len(cards) - 1)
+            player.append(cards[_randcard])
+            cards.pop(_randcard)
 
-    del _cards[_random]
+    #print(players)
+    #print(cards)
+    top_card = cards[randint(0, len(cards) - 1)]
+    used_cards.insert(0, top_card)
+    cards.remove(top_card)
 
-def player_move():
-    """Player are putting cards here"""
-    global player_one, player_two, player_three, player_four, last_card
+    print("Karta na vrchu: {}".format(top_card))
+    if len(top_card) < 3:
 
-    reverse = False
-    to_play = 0
-    order = [1, 2, 3, 4]                                                                #why not list of players? [player_one, player_two, player_three, player_four]
+        while 1:
+            rand_card = cards[randint(0, len(cards) - 1)]
 
-    while 1:
-        if to_play >= 4:
-            to_play = to_play % 4
+            if len(rand_card) >= 3:
+                number, color = rand_card.split("-")
+                print("Barva karty: {}".format(color))
+                break
+    sleep(2)
 
-        if order[to_play] == 1:                                                                                 #player 1
-            #print(9000 * "\n")                                                                                 #"clear" console
-            print("Hraje hrát jedna!! Ostatni nekoukejte se!!!")
-            input("Continue...")
-            print("Karta na poli: {}".format(last_card))
-            print("Tvoje karty jsou: {}".format(" ".join(map(str, player_one))))
+def game():
+    """Cast kde se hra hraje"""
+    print(9000 * "\n")
+    input("Hrac {} je pripraven?".format(actual_player + 1))
+    print(" ".join(map(str, players[actual_player])))
+    last_card()
 
-            move = int(input("Select card(0 - draw): "))
+    if action == 0:
+        draw()
 
-            if move > 0:
-                last_card = player_one[move - 1]
+    
+    next_player()
 
-                used_cards.append(player_one[move - 1])
-                del player_one[move - 1]
-            else:
-                _random = random.randint(0, len(_cards) - 1)
-                player_one.append(_cards[_random])
-                del _cards[_random]
+def draw():
+    """hrac nemuze hrat takze lize"""
+    rand_card = cards[randint(0, len(cards) - 1)]
+    players[actual_player].append(rand_card)
+    cards.remove(rand_card)
 
-            if last_card == "+4":
-                if reverse == False:
-                    pass
+def last_card():
+    """co je ted prave zahrano/na poli"""
+    if len(used_cards) > num_players:
+        print("Karty zahrané v posledním kole: {}".format(used_cards[0: len(players)] ))
+    else:
+        print("Karty zahrané v posledním kole: {}".format(* used_cards))
 
-            if reverse == False:                                                            #next player is set
-                to_play += 1
-            else:
-                to_play -= 1
+def draw_two():
+    """lize nebo posila dal ale +2"""
+    if top == 0:
+        rand_card = cards[randint(0, len(cards) - 1)]
+        players[actual_player].append(rand_card)
+        cards.remove(rand_card)
 
-        elif order[to_play] == 2:                                                                               #player 2
-            #print(9000 * "\n")
-            print("Hraje hrát dva!! Ostatni nekoukejte se!!!")
-            input("Continue...")
-            print("Karta na poli: {}".format(last_card))
-            print("Tvoje karty jsou: {}".format(" ".join(map(str, player_two))))
+def draw_four():
+    """lize 4*"""
+    #zavola se i wild
+    pass
 
-            move = int(input("Select card(0 - draw): "))
+def wild():
+    """hrac zmeni barvu nez zacne dalsi hrac"""
+    pass
 
-            if move > 0:
-                last_card = player_two[move - 1]
+def next_player():
+    """kolobeh order"""
+    pass
 
-                used_cards.append(player_two[move - 1])
-                del player_two[move - 1]
-            else:
-                _random = random.randint(0, len(_cards) - 1)
-                player_two.append(_cards[_random])
-                del _cards[_random]
+def stop():
+    """hrac vynecha nasledujiciho hrace"""
+    pass
 
-
-            if reverse == False:
-                to_play += 1
-            else:
-                to_play -= 1
-
-        elif order[to_play] == 3:                                                                               #player 3
-            #print(9000 * "\n")
-            print("Hraje hrát tri!! Ostatni nekoukejte se!!!")
-            input("Continue...")
-            print("Karta na poli: {}".format(last_card))
-            print("Tvoje karty jsou: {}".format(" ".join(map(str, player_three))))
-
-            move = int(input("Select card(0 - draw): "))
-
-            if move > 0:
-                last_card = player_three[move - 1]
-
-                used_cards.append(player_three[move - 1])
-                del player_three[move - 1]
-            else:
-                _random = random.randint(0, len(_cards) - 1)
-                player_three.append(_cards[_random])
-                del _cards[_random]
-
-
-            if reverse == False:
-                to_play += 1
-            else:
-                to_play -= 1
-
-        elif order[to_play] == 4:                                                                               #player 4
-            #print(9000 * "\n")
-            print("Hraje hrát ctyri!! Ostatni nekoukejte se!!!")
-            input("Continue...")
-            print("Karta na poli: {}".format(last_card))
-            print("Tvoje karty jsou: {}".format(" ".join(map(str, player_four))))
-
-            move = int(input("Select card(0 - draw): "))
-
-            if move > 0:
-                last_card = player_four[move - 1]
-
-                used_cards.append(player_four[move - 1])
-                del player_four[move - 1]
-            else:                                                                                               #draw a card
-                _random = random.randint(0, len(_cards) - 1)
-                player_four.append(_cards[_random])
-                del _cards[_random]
-
-
-            if reverse == False:
-                to_play += 1
-            else:
-                to_play -= 1
-        
-
-def play_game():
-    """main menu for the player"""
-
-    n = input("New game(1/ano/yes): ")
-    start = n.upper()
-    if start == "1" or start == "ANO" or start == "YES":                                                        #asks if the player wish to play a new game
+def Main_menu():
+    """starting menu"""
+    n = int(input("New game?(1 - yes, 0 - no) "))
+    #start = n.upper()
+    if n == 1:
         init()
-        begin()
-        player_move()
+        game()
+        Main_menu()
+    else:
+        input("Game over.")
 
-        play_game()
-    else:                                                                                                       #ends the program
-        print("Game over.")
-        input()
-
-play_game()
+Main_menu()
